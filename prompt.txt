@@ -1,0 +1,68 @@
+Build a complete, working web application called “संकेतवाणी (SanketVani) — Sign Language Detection & Learning” in **one single HTML file**.
+
+### 1. Main requirements
+- Put all HTML, CSS, and JavaScript in the same `index.html` file.
+- Create a beautiful, modern, student-friendly interface.
+- Use a dark navy-blue background with blue and cyan gradients, white text, and yellow accents.
+- Use rounded cards, subtle shadows, smooth animations, clear typography, and a responsive layout that works on laptops and mobile phones.
+- The interface should look polished and professional, like a modern educational technology product.
+
+### 2. Header and layout
+- Display the Hindi title “संकेतवाणी” with the English subtitle “Sign Language Detection & Learning Platform”.
+- Add a short tagline: “हाथों की भाषा, अब हर किसी के लिए”.
+- Include navigation or tabs for “Live Detection”, “Learn Alphabet”, and “About”.
+- Show a clear camera status indicator.
+
+### 3. Live hand-sign detection
+- Use the user's webcam to detect a hand in real time.
+- Use MediaPipe Hands or MediaPipe Hand Landmarker through browser-compatible JavaScript loaded from a CDN.
+- Draw visible hand landmarks and connections over the camera feed.
+- Display the predicted letter in a large, easy-to-read output card.
+- Show the confidence or detection status only if it is genuinely calculated; do not invent confidence scores.
+- Include Start Camera, Stop Camera, and Reset buttons.
+- Ask for camera permission only after the user clicks Start Camera.
+- Handle camera permission denial, missing cameras, loading failures, and no-hand-detected states gracefully.
+- Stop the camera stream when the user stops detection.
+- Keep the application functional without a backend or build tools.
+
+### 4. Gesture recognition
+- Implement a real, understandable gesture-classification function using hand landmark coordinates and finger positions.
+- Support the ASL manual alphabet A–Z as far as the implementation can reliably distinguish the gestures.
+- Include a space gesture for separating words.
+- Display J and Z as motion-based gestures and explain that they require movement tracking; do not pretend that a single still frame can recognize them reliably.
+- Avoid claiming perfect recognition. If a gesture cannot be distinguished reliably, show “Unknown gesture” rather than displaying a random letter.
+- Add a short stability check so the displayed character does not flicker excessively between predictions.
+- Keep the classification code clearly commented so students can understand and improve it.
+
+### 5. Alphabet learning chart
+- Create an attractive A–Z alphabet chart using individual cards.
+- Each card must show the letter, a clear hand-sign illustration or image, and the letter name.
+- Include a separate Space card.
+- Make sure the illustrations correspond to the intended ASL alphabet signs. Do not use random hand photos or repeat the same hand image for different letters.
+- If reliable external images are unavailable, use carefully designed local SVG illustrations or clearly label the chart as a learning reference.
+- Clicking a card should open a larger view with the letter and sign illustration.
+
+### 6. Additional features
+- Add a simple “How it works” section explaining:
+  1. Webcam captures the hand.
+  2. Hand landmarks are detected.
+  3. Gesture rules classify the sign.
+  4. The predicted character appears on screen.
+- Add a small technology section mentioning HTML, CSS, JavaScript, and MediaPipe.
+- Add a beginner-friendly About section describing the project's accessibility goal.
+- Add clear loading, error, and success messages.
+- Make buttons, tabs, and alphabet cards genuinely interactive.
+
+### 7. Technical requirements
+- Return the complete application as a single `index.html` file, with no separate CSS or JavaScript files.
+- External CDN scripts are allowed for MediaPipe; explain that an internet connection may be required.
+- Do not use React, Vue, a backend, a database, npm, or a build process.
+- Use semantic HTML, accessible labels, and readable code comments.
+- Ensure the webcam video and landmark overlay remain correctly aligned and responsive.
+- Avoid placeholder buttons, fake detection, hard-coded random predictions, and misleading AI claims.
+- Test for JavaScript errors and fix them before returning the result.
+
+### 8. Final output
+Return the complete, ready-to-save HTML code in one code block. Briefly explain how to save it as `index.html` and run it through localhost or HTTPS so webcam permissions work.
+
+Prioritize working functionality, honest recognition limits, a beautiful interface, and code that a student can understand.
