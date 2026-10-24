@@ -808,7 +808,8 @@
         display: flex;
         gap: 8px;
       }
-      #start {
+      #start,
+      #customStart {
         background: var(--yellow);
         color: var(--ink);
         border: 0;
@@ -816,7 +817,9 @@
         box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
       }
       #stop,
-      #flip {
+      #flip,
+      #customStop,
+      #customFlip {
         background: rgba(17, 17, 17, 0.7);
         color: #fff;
         border: 1px solid rgba(255, 255, 255, 0.35);
@@ -827,7 +830,8 @@
         gap: 14px;
         margin: 16px 0 10px;
       }
-      #letter {
+      #letter,
+      #customLetter {
         min-width: 76px;
         height: 76px;
         border-radius: 22px;
@@ -842,11 +846,13 @@
           background 0.2s,
           transform 0.2s;
       }
-      #letter.dim {
+      #letter.dim,
+      #customLetter.dim {
         background: #d6e0f3;
         color: #fff;
       }
-      #letter.pop {
+      #letter.pop,
+      #customLetter.pop {
         animation: bump 0.3s;
       }
       @keyframes bump {
@@ -1531,23 +1537,20 @@ HELLO</textarea
         <div class="head">
           <div>
             <h2 class="hd">
-              <i data-i="hand" data-k="purple" data-s="md"></i>नए हाथ-संकेत
-              (A–Z)
+              <i data-i="cam" data-k="blue" data-s="md"></i>नए हाथ-संकेत (A–Z)
             </h2>
-            <p>अलग संकेत सेट: उँगलियों के नंबर से अक्षर और स्पेस बनाएँ; ASL पेज जस का तस है।</p>
+            <p>कैमरे के सामने नए संकेत दिखाइए</p>
           </div>
-          <div class="status">
+          <div class="status" id="customStatus">
             <span class="dot"></span><span id="customStatusText">तैयार</span>
           </div>
         </div>
         <div id="customBanner" class="banner" role="alert"></div>
-        <div class="guide">
-          <div><b>1</b>अंगूठा 1, तर्जनी 2, मध्यमा 3, अनामिका 4, छोटी उँगली 5</div>
-          <div><b>2</b>हथेली कैमरे की ओर रखें; कोड वाली उँगलियाँ सीधी करें</div>
-          <div><b>3</b>अक्षर या स्पेस का संकेत चार फ्रेम स्थिर रखें</div>
-          <div><b>4</b>दोहराने से पहले हाथ का संकेत बदलें</div>
-        </div>
-        <section class="stage" id="customStage" aria-label="नए संकेतों का कैमरा">
+        <section
+          class="stage"
+          id="customStage"
+          aria-label="नए संकेतों का कैमरा"
+        >
           <video
             id="customVideo"
             class="custom-source"
@@ -1565,7 +1568,7 @@ HELLO</textarea
           <div class="empty">
             <p>
               <span class="big"
-                ><i data-i="cam" data-k="purple" data-s="xl"></i></span
+                ><i data-i="cam" data-k="blue" data-s="xl"></i></span
               ><strong>कैमरा बंद है</strong>नए संकेत पहचानने के लिए चालू करें
             </p>
           </div>
@@ -1591,42 +1594,138 @@ HELLO</textarea
           placeholder="पहचाने गए अक्षर और स्पेस यहाँ जुड़ेंगे"
         ></textarea>
         <div class="row">
-          <button id="customBack" type="button">आख़िरी अक्षर मिटाएँ</button>
-          <button id="customClear" type="button">साफ़ करें</button>
+          <button id="customSpace" type="button">
+            <i data-i="space" data-k="purple" data-s="xs"></i>स्पेस
+          </button>
+          <button id="customBack" type="button">
+            <i data-i="back" data-k="orange" data-s="xs"></i>मिटाएँ
+          </button>
+          <button id="customClear" type="button">
+            <i data-i="trash" data-k="coral" data-s="xs"></i>साफ़
+          </button>
+          <button id="customCopy" class="cp grow" type="button">
+            <i data-i="copy" data-k="yellow" data-s="xs"></i
+            ><span id="customCopyLbl">कॉपी</span>
+          </button>
+          <button id="customSpeak" type="button">सुनें</button>
         </div>
         <section class="custom-chart-wrap" aria-labelledby="customChartTitle">
           <h3 class="custom-chart-title" id="customChartTitle">
             हाथ-संकेत कोड चार्ट
           </h3>
-          <p class="custom-chart-note">अक्षर के सामने सीधी रखी जाने वाली उँगलियों के नंबर हैं। O के लिए मुट्ठी बनाएँ।</p>
+          <p class="custom-chart-note">
+            अक्षर के सामने सीधी रखी जाने वाली उँगलियों के नंबर हैं। O के लिए
+            मुट्ठी बनाएँ।
+          </p>
           <div class="custom-codes" role="list" aria-label="अक्षर और उँगली कोड">
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">A</span><span class="custom-code-value">1</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">B</span><span class="custom-code-value">2</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">C</span><span class="custom-code-value">5</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">D</span><span class="custom-code-value">12</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">E</span><span class="custom-code-value">123</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">F</span><span class="custom-code-value">1234</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">G</span><span class="custom-code-value">12345</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">H</span><span class="custom-code-value">2345</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">I</span><span class="custom-code-value">345</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">J</span><span class="custom-code-value">45</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">K</span><span class="custom-code-value">15</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">L</span><span class="custom-code-value">23</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">M</span><span class="custom-code-value">34</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">N</span><span class="custom-code-value">234</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">O</span><span class="custom-code-value">मुट्ठी</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">P</span><span class="custom-code-value">25</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">Q</span><span class="custom-code-value">35</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">R</span><span class="custom-code-value">13</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">S</span><span class="custom-code-value">4</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">T</span><span class="custom-code-value">134</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">U</span><span class="custom-code-value">1345</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">V</span><span class="custom-code-value">1245</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">W</span><span class="custom-code-value">24</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">X</span><span class="custom-code-value">14</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">Y</span><span class="custom-code-value">124</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">Z</span><span class="custom-code-value">1235</span></div>
-            <div class="custom-code" role="listitem"><span class="custom-code-letter">स्पेस</span><span class="custom-code-value">125</span></div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">A</span
+              ><span class="custom-code-value">1</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">B</span
+              ><span class="custom-code-value">2</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">C</span
+              ><span class="custom-code-value">5</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">D</span
+              ><span class="custom-code-value">12</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">E</span
+              ><span class="custom-code-value">123</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">F</span
+              ><span class="custom-code-value">1234</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">G</span
+              ><span class="custom-code-value">12345</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">H</span
+              ><span class="custom-code-value">2345</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">I</span
+              ><span class="custom-code-value">345</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">J</span
+              ><span class="custom-code-value">45</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">K</span
+              ><span class="custom-code-value">15</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">L</span
+              ><span class="custom-code-value">23</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">M</span
+              ><span class="custom-code-value">34</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">N</span
+              ><span class="custom-code-value">234</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">O</span
+              ><span class="custom-code-value">मुट्ठी</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">P</span
+              ><span class="custom-code-value">25</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">Q</span
+              ><span class="custom-code-value">35</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">R</span
+              ><span class="custom-code-value">13</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">S</span
+              ><span class="custom-code-value">4</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">T</span
+              ><span class="custom-code-value">134</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">U</span
+              ><span class="custom-code-value">1345</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">V</span
+              ><span class="custom-code-value">1245</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">W</span
+              ><span class="custom-code-value">24</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">X</span
+              ><span class="custom-code-value">14</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">Y</span
+              ><span class="custom-code-value">124</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">Z</span
+              ><span class="custom-code-value">1235</span>
+            </div>
+            <div class="custom-code" role="listitem">
+              <span class="custom-code-letter">स्पेस</span
+              ><span class="custom-code-value">125</span>
+            </div>
           </div>
         </section>
       </div>
@@ -1772,8 +1871,12 @@ HELLO</textarea
         customStatusText = $("#customStatusText"),
         customHud = $("#customHud"),
         customBanner = $("#customBanner"),
+        customStatus = $("#customStatus"),
         customLetter = $("#customLetter"),
         customText = $("#customText"),
+        customCopyBtn = $("#customCopy"),
+        customCopyLabel = $("#customCopyLbl"),
+        customSpeakBtn = $("#customSpeak"),
         customStartBtn = $("#customStart"),
         customStopBtn = $("#customStop"),
         customFlipBtn = $("#customFlip");
@@ -1786,7 +1889,9 @@ HELLO</textarea
         customCandidateCount = 0,
         customLastCommitted = "",
         customArmed = true,
-        customSpaceLatched = false;
+        customSpaceLatched = false,
+        customCopyTimer = 0,
+        customSpeechRunId = 0;
       const EXTENDED_ANGLE = 150,
         EDGE_PALM = 0.4,
         DOWN_ANGLE = 145;
@@ -2300,39 +2405,40 @@ HELLO</textarea
           upCode || (states.every((state) => state === "c") ? "fist" : "");
         return (
           {
-            "1": "A",
-            "2": "B",
-            "5": "C",
-            "12": "D",
-            "123": "E",
-            "1234": "F",
-            "12345": "G",
-            "2345": "H",
-            "345": "I",
-            "45": "J",
-            "15": "K",
-            "23": "L",
-            "34": "M",
-            "234": "N",
+            1: "A",
+            2: "B",
+            5: "C",
+            12: "D",
+            123: "E",
+            1234: "F",
+            12345: "G",
+            2345: "H",
+            345: "I",
+            45: "J",
+            15: "K",
+            23: "L",
+            34: "M",
+            234: "N",
             fist: "O",
-            "25": "P",
-            "35": "Q",
-            "13": "R",
-            "4": "S",
-            "134": "T",
-            "1345": "U",
-            "1245": "V",
-            "24": "W",
-            "14": "X",
-            "124": "Y",
-            "1235": "Z",
-            "125": " ",
+            25: "P",
+            35: "Q",
+            13: "R",
+            4: "S",
+            134: "T",
+            1345: "U",
+            1245: "V",
+            24: "W",
+            14: "X",
+            124: "Y",
+            1235: "Z",
+            125: " ",
           }[code] || ""
         );
       }
       function setCustomStatus(message) {
         customStatusText.textContent = message;
         customHud.textContent = message;
+        customStatus.classList.toggle("live", customRunning);
       }
       function showCustomBanner(message) {
         customBanner.textContent = message;
@@ -2418,6 +2524,11 @@ HELLO</textarea
         }
         if (letter !== " ") customSpaceLatched = false;
         const displayLetter = letter === " " ? "␣" : letter;
+        if (customLetter.textContent !== displayLetter) {
+          customLetter.classList.remove("pop");
+          void customLetter.offsetWidth;
+          customLetter.classList.add("pop");
+        }
         customLetter.textContent = displayLetter;
         customLetter.classList.remove("dim");
         setCustomStatus(letter === " " ? "स्पेस" : `पहचाना: ${letter}`);
@@ -2652,9 +2763,66 @@ HELLO</textarea
       });
       $("#customBack").addEventListener("click", () => {
         customText.value = customText.value.slice(0, -1);
+        customLastCommitted = "";
+        customArmed = true;
+      });
+      $("#customSpace").addEventListener("click", () => {
+        customText.value += " ";
+        customLastCommitted = "";
+        customArmed = true;
       });
       $("#customClear").addEventListener("click", () => {
         customText.value = "";
+        customLastCommitted = "";
+        customArmed = true;
+        clearCustomBanner();
+      });
+      customCopyBtn.addEventListener("click", async () => {
+        if (!customText.value) {
+          showCustomBanner("कॉपी करने के लिए पहले हाथ के संकेत दिखाएँ।");
+          return;
+        }
+        try {
+          await navigator.clipboard.writeText(customText.value);
+          customCopyLabel.textContent = "कॉपी हो गया";
+          clearTimeout(customCopyTimer);
+          customCopyTimer = setTimeout(
+            () => (customCopyLabel.textContent = "कॉपी"),
+            1400,
+          );
+        } catch (error) {
+          customText.focus();
+          customText.select();
+          showCustomBanner(
+            "कॉपी नहीं हो पाया। लेख चुन लिया है; कॉपी करने के लिए दबाएँ।",
+          );
+        }
+      });
+      customSpeakBtn.addEventListener("click", () => {
+        const text = customText.value.trim();
+        if (!text) {
+          showCustomBanner("पहले हाथ के संकेत दिखाएँ।");
+          return;
+        }
+        if (
+          !("speechSynthesis" in window) ||
+          !("SpeechSynthesisUtterance" in window)
+        ) {
+          showCustomBanner(
+            "इस ब्राउज़र में आवाज़ चलाने की सुविधा उपलब्ध नहीं है।",
+          );
+          return;
+        }
+        const id = ++customSpeechRunId;
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "en-US";
+        utterance.rate = 0.9;
+        utterance.onerror = () => {
+          if (id === customSpeechRunId)
+            showCustomBanner("आवाज़ नहीं चल पाई। कृपया फिर से कोशिश करें।");
+        };
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utterance);
       });
       $("#space").addEventListener("click", () => insertText(" "));
       $("#back").addEventListener("click", () => {
