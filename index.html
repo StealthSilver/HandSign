@@ -620,40 +620,94 @@
         flex: none;
       }
       .custom-chart-wrap {
-        overflow-x: auto;
-        margin: 18px 0;
+        margin: 24px 0 0;
+        padding: 16px;
         border: 1px solid var(--line);
         border-radius: 18px;
         background: #fff;
         box-shadow: var(--shadow);
       }
-      .custom-chart {
-        width: 100%;
-        min-width: 460px;
-        border-collapse: collapse;
-        text-align: left;
-      }
-      .custom-chart caption {
-        padding: 14px 16px;
+      .custom-chart-title {
+        margin: 0;
         color: var(--ink);
         font-size: 18px;
         font-weight: 800;
-        text-align: left;
       }
-      .custom-chart th,
-      .custom-chart td {
-        padding: 10px 16px;
-        border-top: 1px solid var(--line);
+      .custom-chart-note {
+        margin: 2px 0 12px;
+        color: var(--muted);
+        font-size: 13px;
       }
-      .custom-chart th {
+      .custom-codes {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(82px, 1fr));
+        gap: 8px;
+      }
+      .custom-code {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        min-height: 40px;
+        padding: 6px 10px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
         background: var(--soft);
-        color: var(--ink);
-        font-size: 14px;
       }
-      .custom-chart td:first-child,
-      .custom-chart td:nth-child(2) {
+      .custom-code-letter,
+      .custom-code-value {
         font-weight: 800;
         white-space: nowrap;
+      }
+      .custom-code-letter {
+        color: var(--ink);
+      }
+      .custom-code-value {
+        display: grid;
+        min-width: 26px;
+        height: 26px;
+        padding: 0 6px;
+        place-items: center;
+        border-radius: 8px;
+        color: #fff;
+        background: var(--blue);
+        font-size: 13px;
+      }
+      .custom-code:nth-child(6n + 2) {
+        background: #fff1f3;
+      }
+      .custom-code:nth-child(6n + 2) .custom-code-value {
+        background: var(--coral);
+      }
+      .custom-code:nth-child(6n + 3) {
+        background: #e9fbf7;
+      }
+      .custom-code:nth-child(6n + 3) .custom-code-value {
+        background: var(--mint);
+      }
+      .custom-code:nth-child(6n + 4) {
+        background: #f2edff;
+      }
+      .custom-code:nth-child(6n + 4) .custom-code-value {
+        background: var(--purple);
+      }
+      .custom-code:nth-child(6n + 5) {
+        background: #fff5e9;
+      }
+      .custom-code:nth-child(6n + 5) .custom-code-value {
+        background: var(--orange);
+      }
+      .custom-code:nth-child(6n) {
+        background: #eaf8ff;
+      }
+      .custom-code:nth-child(6n) .custom-code-value {
+        background: #168dc2;
+      }
+      .custom-code:nth-child(6n + 1) {
+        background: #fffbe2;
+      }
+      .custom-code:nth-child(6n + 1) .custom-code-value {
+        background: #d4ae00;
       }
       .guide div:nth-child(1) b {
         background: var(--blue);
@@ -1487,11 +1541,11 @@ HELLO</textarea
           </div>
         </div>
         <div id="customBanner" class="banner" role="alert"></div>
-        <div class="sec">
-          उँगली नंबर: अंगूठा 1, तर्जनी 2, मध्यमा 3, अनामिका 4, छोटी उँगली 5।
-          दिए गए नंबर वाली उँगलियाँ सीधी रखें और बाकी उँगलियाँ मोड़ें। हथेली
-          कैमरे की ओर रखें। अक्षर या स्पेस के संकेत को चार फ्रेम स्थिर रखें;
-          दोहराने के लिए पहले हाथ का संकेत बदलें।
+        <div class="guide">
+          <div><b>1</b>अंगूठा 1, तर्जनी 2, मध्यमा 3, अनामिका 4, छोटी उँगली 5</div>
+          <div><b>2</b>हथेली कैमरे की ओर रखें; कोड वाली उँगलियाँ सीधी करें</div>
+          <div><b>3</b>अक्षर या स्पेस का संकेत चार फ्रेम स्थिर रखें</div>
+          <div><b>4</b>दोहराने से पहले हाथ का संकेत बदलें</div>
         </div>
         <section class="stage" id="customStage" aria-label="नए संकेतों का कैमरा">
           <video
@@ -1524,47 +1578,6 @@ HELLO</textarea
             <button id="customStop" type="button" hidden>बंद करें</button>
           </div>
         </section>
-        <div class="custom-chart-wrap">
-          <table class="custom-chart">
-            <caption>हाथ-संकेत कोड चार्ट</caption>
-            <thead>
-              <tr>
-                <th scope="col">अक्षर</th>
-                <th scope="col">कोड</th>
-                <th scope="col">सीधी रखी जाने वाली उँगलियाँ</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>A</td><td>1</td><td>अंगूठा</td></tr>
-              <tr><td>B</td><td>2</td><td>तर्जनी</td></tr>
-              <tr><td>C</td><td>5</td><td>छोटी उँगली</td></tr>
-              <tr><td>D</td><td>12</td><td>अंगूठा, तर्जनी</td></tr>
-              <tr><td>E</td><td>123</td><td>अंगूठा, तर्जनी, मध्यमा</td></tr>
-              <tr><td>F</td><td>1234</td><td>अंगूठा, तर्जनी, मध्यमा, अनामिका</td></tr>
-              <tr><td>G</td><td>12345</td><td>सभी पाँच उँगलियाँ</td></tr>
-              <tr><td>H</td><td>2345</td><td>तर्जनी, मध्यमा, अनामिका, छोटी उँगली</td></tr>
-              <tr><td>I</td><td>345</td><td>मध्यमा, अनामिका, छोटी उँगली</td></tr>
-              <tr><td>J</td><td>45</td><td>अनामिका, छोटी उँगली</td></tr>
-              <tr><td>K</td><td>15</td><td>अंगूठा, छोटी उँगली</td></tr>
-              <tr><td>L</td><td>23</td><td>तर्जनी, मध्यमा</td></tr>
-              <tr><td>M</td><td>34</td><td>मध्यमा, अनामिका</td></tr>
-              <tr><td>N</td><td>234</td><td>तर्जनी, मध्यमा, अनामिका</td></tr>
-              <tr><td>O</td><td>मुट्ठी</td><td>सभी उँगलियाँ मुड़ी</td></tr>
-              <tr><td>P</td><td>25</td><td>तर्जनी, छोटी उँगली</td></tr>
-              <tr><td>Q</td><td>35</td><td>मध्यमा, छोटी उँगली</td></tr>
-              <tr><td>R</td><td>13</td><td>अंगूठा, मध्यमा</td></tr>
-              <tr><td>S</td><td>4</td><td>अनामिका</td></tr>
-              <tr><td>T</td><td>134</td><td>अंगूठा, मध्यमा, अनामिका</td></tr>
-              <tr><td>U</td><td>1345</td><td>अंगूठा, मध्यमा, अनामिका, छोटी उँगली</td></tr>
-              <tr><td>V</td><td>1245</td><td>अंगूठा, तर्जनी, अनामिका, छोटी उँगली</td></tr>
-              <tr><td>W</td><td>24</td><td>तर्जनी, अनामिका</td></tr>
-              <tr><td>X</td><td>14</td><td>अंगूठा, अनामिका</td></tr>
-              <tr><td>Y</td><td>124</td><td>अंगूठा, तर्जनी, अनामिका</td></tr>
-              <tr><td>Z</td><td>1235</td><td>अंगूठा, तर्जनी, मध्यमा, छोटी उँगली</td></tr>
-              <tr><td>स्पेस</td><td>125</td><td>अंगूठा, तर्जनी, छोटी उँगली</td></tr>
-            </tbody>
-          </table>
-        </div>
         <div class="bar">
           <div id="customLetter" class="lat dim">—</div>
           <p>पहचाना गया नया अक्षर</p>
@@ -1581,6 +1594,41 @@ HELLO</textarea
           <button id="customBack" type="button">आख़िरी अक्षर मिटाएँ</button>
           <button id="customClear" type="button">साफ़ करें</button>
         </div>
+        <section class="custom-chart-wrap" aria-labelledby="customChartTitle">
+          <h3 class="custom-chart-title" id="customChartTitle">
+            हाथ-संकेत कोड चार्ट
+          </h3>
+          <p class="custom-chart-note">अक्षर के सामने सीधी रखी जाने वाली उँगलियों के नंबर हैं। O के लिए मुट्ठी बनाएँ।</p>
+          <div class="custom-codes" role="list" aria-label="अक्षर और उँगली कोड">
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">A</span><span class="custom-code-value">1</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">B</span><span class="custom-code-value">2</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">C</span><span class="custom-code-value">5</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">D</span><span class="custom-code-value">12</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">E</span><span class="custom-code-value">123</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">F</span><span class="custom-code-value">1234</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">G</span><span class="custom-code-value">12345</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">H</span><span class="custom-code-value">2345</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">I</span><span class="custom-code-value">345</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">J</span><span class="custom-code-value">45</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">K</span><span class="custom-code-value">15</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">L</span><span class="custom-code-value">23</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">M</span><span class="custom-code-value">34</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">N</span><span class="custom-code-value">234</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">O</span><span class="custom-code-value">मुट्ठी</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">P</span><span class="custom-code-value">25</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">Q</span><span class="custom-code-value">35</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">R</span><span class="custom-code-value">13</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">S</span><span class="custom-code-value">4</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">T</span><span class="custom-code-value">134</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">U</span><span class="custom-code-value">1345</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">V</span><span class="custom-code-value">1245</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">W</span><span class="custom-code-value">24</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">X</span><span class="custom-code-value">14</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">Y</span><span class="custom-code-value">124</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">Z</span><span class="custom-code-value">1235</span></div>
+            <div class="custom-code" role="listitem"><span class="custom-code-letter">स्पेस</span><span class="custom-code-value">125</span></div>
+          </div>
+        </section>
       </div>
     </div>
 
