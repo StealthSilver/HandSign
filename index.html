@@ -940,7 +940,7 @@
         overflow: hidden;
         border: 4px solid #fff;
         box-shadow: 0 18px 44px rgba(29, 78, 154, 0.14);
-        background: #cbd9ec;
+        background: linear-gradient(135deg, #a6e8f5, #c9d1ff 55%, #ffd3b5);
       }
       #actor {
         width: 100%;
@@ -3127,16 +3127,62 @@ HELLO</textarea
         });
         renderer.outputEncoding = THREE.sRGBEncoding;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.12;
-        renderer.setClearColor(0xcbd9ec, 1);
+        renderer.toneMappingExposure = 0.9;
+        renderer.setClearColor(0xb8e7f4, 1);
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xcbd9ec);
+        scene.background = new THREE.Color(0xb8e7f4);
         const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 80);
-        scene.add(new THREE.HemisphereLight(0xfff8ee, 0xb9c7e4, 0.85));
-        const key = new THREE.DirectionalLight(0xfff6ea, 1.25);
+        const backdropCanvas = document.createElement("canvas");
+        backdropCanvas.width = 1024;
+        backdropCanvas.height = 768;
+        const backdropContext = backdropCanvas.getContext("2d");
+        const backdropGradient = backdropContext.createLinearGradient(
+          0,
+          0,
+          900,
+          768,
+        );
+        backdropGradient.addColorStop(0, "#55c9e8");
+        backdropGradient.addColorStop(0.52, "#859cf3");
+        backdropGradient.addColorStop(1, "#ffae72");
+        backdropContext.fillStyle = backdropGradient;
+        backdropContext.fillRect(0, 0, backdropCanvas.width, backdropCanvas.height);
+        [
+          [120, 160, 190, "rgba(83, 255, 221, 0.38)"],
+          [840, 180, 220, "rgba(255, 202, 117, 0.38)"],
+          [680, 690, 250, "rgba(255, 119, 173, 0.24)"],
+          [90, 700, 210, "rgba(112, 142, 255, 0.26)"],
+        ].forEach(([x, y, radius, color]) => {
+          const glow = backdropContext.createRadialGradient(x, y, 0, x, y, radius);
+          glow.addColorStop(0, color);
+          glow.addColorStop(1, "rgba(255, 255, 255, 0)");
+          backdropContext.fillStyle = glow;
+          backdropContext.fillRect(
+            x - radius,
+            y - radius,
+            radius * 2,
+            radius * 2,
+          );
+        });
+        const backdropTexture = new THREE.CanvasTexture(backdropCanvas);
+        backdropTexture.encoding = THREE.sRGBEncoding;
+        const backdrop = new THREE.Mesh(
+          new THREE.PlaneGeometry(48, 36),
+          new THREE.MeshBasicMaterial({
+            map: backdropTexture,
+            depthTest: false,
+            depthWrite: false,
+            toneMapped: false,
+          }),
+        );
+        backdrop.position.set(0, 3.5, -9);
+        backdrop.renderOrder = -1;
+        scene.add(backdrop);
+        scene.add(new THREE.HemisphereLight(0xfff8ee, 0xb9c7e4, 0.65));
+        const key = new THREE.DirectionalLight(0xfff6ea, 1.05);
         key.position.set(6, 10, 8);
         scene.add(key);
-        const fill = new THREE.DirectionalLight(0xd6e4ff, 0.55);
+        const fill = new THREE.DirectionalLight(0xd6e4ff, 0.4);
         fill.position.set(-8, 4, 6);
         scene.add(fill);
         const rim = new THREE.DirectionalLight(0xffe14a, 0.45);
@@ -3144,17 +3190,17 @@ HELLO</textarea
         scene.add(rim);
 
         const skin = new THREE.MeshStandardMaterial({
-          color: 0xf2a879,
+          color: 0xe89568,
           roughness: 0.48,
           metalness: 0,
         });
         const skinLight = new THREE.MeshStandardMaterial({
-          color: 0xffc49a,
+          color: 0xf7ad80,
           roughness: 0.4,
           metalness: 0,
         });
         const knuckleMat = new THREE.MeshStandardMaterial({
-          color: 0xe89568,
+          color: 0xd78358,
           roughness: 0.55,
           metalness: 0,
         });
@@ -3164,12 +3210,12 @@ HELLO</textarea
           metalness: 0.04,
         });
         const shirt = new THREE.MeshStandardMaterial({
-          color: 0x1763f5,
+          color: 0xc52e51,
           roughness: 0.72,
           metalness: 0,
         });
         const shirtLight = new THREE.MeshStandardMaterial({
-          color: 0x78a8ff,
+          color: 0xffd166,
           roughness: 0.6,
           metalness: 0,
         });
@@ -3197,10 +3243,10 @@ HELLO</textarea
         skin.emissiveIntensity = 0.09;
         skinLight.emissive = new THREE.Color(0x5a2c1c);
         skinLight.emissiveIntensity = 0.07;
-        shirt.emissive = new THREE.Color(0x0b2e79);
-        shirt.emissiveIntensity = 0.1;
-        shirtLight.emissive = new THREE.Color(0x183d82);
-        shirtLight.emissiveIntensity = 0.06;
+        shirt.emissive = new THREE.Color(0x5c0b22);
+        shirt.emissiveIntensity = 0.12;
+        shirtLight.emissive = new THREE.Color(0x664000);
+        shirtLight.emissiveIntensity = 0.08;
 
         const sphere = new THREE.SphereGeometry(1, 28, 18);
         function ball(rx, ry, rz, material, parent) {
@@ -3251,7 +3297,12 @@ HELLO</textarea
 
         const sun = new THREE.Mesh(
           new THREE.CircleGeometry(2.7, 48),
-          new THREE.MeshBasicMaterial({ color: 0xffe14a }),
+          new THREE.MeshBasicMaterial({
+            color: 0xffe27a,
+            transparent: true,
+            opacity: 0.62,
+            depthWrite: false,
+          }),
         );
         sun.position.set(-3.7, 4.55, -2.6);
         scene.add(sun);
@@ -3511,9 +3562,9 @@ HELLO</textarea
           const dot = new THREE.Mesh(
             new THREE.SphereGeometry(0.09, 10, 8),
             new THREE.MeshBasicMaterial({
-              color: 0x1d4e9a,
+              color: 0xff5f86,
               transparent: true,
-              opacity: 0.2,
+              opacity: 0.34,
             }),
           );
           dot.visible = false;
@@ -3640,7 +3691,7 @@ HELLO</textarea
             dot.position.copy(point);
             const fade = (index + 1) / Math.max(1, trail.length);
             dot.scale.setScalar(0.7 + fade * 1.5);
-            dot.material.opacity = 0.2 + fade * 0.75;
+            dot.material.opacity = 0.34 + fade * 0.62;
           });
 
           const targetX = pointerX * 2.2;
