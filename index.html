@@ -628,6 +628,9 @@
       .guide div:nth-child(3) b {
         background: var(--mint);
       }
+      .guide div:nth-child(4) b {
+        background: var(--purple);
+      }
       .stage {
         position: relative;
         width: min(100%, calc(68vh * 4 / 3));
@@ -826,7 +829,7 @@
         overflow: hidden;
         border: 4px solid #fff;
         box-shadow: 0 18px 44px rgba(29, 78, 154, 0.14);
-        background: #f3f7ff;
+        background: #cbd9ec;
       }
       #actor {
         width: 100%;
@@ -1300,7 +1303,8 @@
         <div class="guide">
           <div><b>1</b>अच्छी रोशनी में बैठें</div>
           <div><b>2</b>पूरी हथेली दिखाएँ</div>
-          <div><b>3</b>हर अक्षर पर एक पल रुकें</div>
+          <div><b>3</b>संकेत बदलें; दोहराने से पहले हाथ ढीला करें</div>
+          <div><b>4</b>स्पेस: तर्जनी और छोटी उँगली उठाएँ, अंगूठा फैलाएँ</div>
         </div>
         <section class="stage" id="stage" aria-label="कैमरा">
           <video
@@ -1354,6 +1358,7 @@
             <i data-i="copy" data-k="yellow" data-s="xs"></i
             ><span id="copyLbl">कॉपी</span>
           </button>
+          <button id="speak" type="button">सुनें</button>
         </div>
         <div class="next">
           <span>अब उल्टा करके देखें: लिखिए और हाथ से संकेत देखिए</span
@@ -1530,6 +1535,7 @@ HELLO</textarea
       let stream = null,
         running = false,
         runId = 0,
+        speechRunId = 0,
         raf = 0,
         landmarks = [],
         pending = "",
@@ -1645,9 +1651,15 @@ HELLO</textarea
       function closedLetter(f) {
         const tx = f.thumbTip[0],
           ty = f.thumbTip[1];
-        if (f.meanAngle >= 132) return ["C", 0.84];
-        if (f.tipGap <= 0.22 && f.meanAngle >= 108) return ["O", 0.86];
-        if (f.tipGap <= 0.22) return ["E", 0.84];
+        if (f.tipGap <= 0.3 && f.pinch <= 0.3) return ["O", 0.9];
+        if (
+          f.meanAngle >= 100 &&
+          f.meanAngle <= 158 &&
+          f.tipGap > 0.3 &&
+          f.pinch > 0.24
+        )
+          return ["C", 0.88];
+        if (f.tipGap <= 0.3) return ["E", 0.84];
         if (tx > f.indexMcp[0] + 0.12 && ty < 1.25) return ["A", 0.88];
         if (ty > 1.05 && tx < f.indexMcp[0]) return ["S", 0.82];
         if (tx < f.ringMcp[0] + 0.08) return ["M", 0.78];
@@ -1658,13 +1670,14 @@ HELLO</textarea
         const edge = f.palmArea < EDGE_PALM,
           down = Math.abs(f.indexAngleImg) >= DOWN_ANGLE;
         if (edge && down) return ["P", 0.82];
-        if (edge) return ["H", 0.86];
         if (f.crossed) return ["R", 0.88];
         const tx = f.thumbTip[0],
           ty = f.thumbTip[1],
           lo = Math.min(f.indexTip[0], f.middleTip[0]) - 0.1,
           hi = Math.max(f.indexTip[0], f.middleTip[0]) + 0.1;
         if (ty > 1.05 && lo <= tx && tx <= hi) return ["K", 0.86];
+        if (f.spread >= 0.3) return ["V", 0.9];
+        if (edge) return f.spread < 0.24 ? ["H", 0.86] : ["", 0];
         if (f.spread >= 0.24) return ["V", 0.9];
         return ["U", 0.88];
       }
@@ -1691,8 +1704,9 @@ HELLO</textarea
       }
       function classify(f) {
         if (f.hooked) return ["X", 0.84];
-        if (unclear(f)) return ["", 0];
         const [i, m, r, p] = f.ext;
+        if (!i && !m && !r && !p) return closedLetter(f);
+        if (unclear(f)) return ["", 0];
         if (p && !i && !m && !r)
           return f.thumbTip[0] > 0.7 ? ["Y", 0.9] : ["I", 0.9];
         if (f.pinch < 0.32 && m && r && p && !i) return ["F", 0.9];
@@ -1701,7 +1715,6 @@ HELLO</textarea
         if (i && m && r && !p) return ["W", 0.88];
         if (i && m && !r && !p) return twoFingers(f);
         if (i && !m && !r && !p) return indexOnly(f);
-        if (!i && !m && !r && !p) return closedLetter(f);
         return ["", 0];
       }
       function pathLength(pts) {
@@ -1721,27 +1734,39 @@ HELLO</textarea
       }
       function SignReader() {
         this.history = [];
+        this.spaceLatched = false;
       }
       SignReader.prototype.miss = function () {
         this.history = [];
+        this.spaceLatched = false;
       };
       SignReader.prototype.read = function (lm) {
         const pts = lm.map((p) => [p.x, p.y, p.z || 0]);
         const out = pts.map((p) => [p[0], p[1]]);
         const f = extractHand(pts);
-        if (!f)
+        if (!f) {
+          this.miss();
           return { hand: true, letter: "", confidence: 0, landmarks: out };
+        }
         let [l, c] = classify(f);
-        [l, c] = this.motion(l, c, pts);
+        [l, c] = this.motion(l, c, pts, f);
         return { hand: true, letter: l, confidence: c, landmarks: out };
       };
-      SignReader.prototype.motion = function (l, c, pts) {
+      SignReader.prototype.motion = function (l, c, pts, f) {
         const now = performance.now() / 1000;
         if (
           this.history.length &&
           now - this.history[this.history.length - 1][0] > 0.75
         )
           this.history = [];
+        const spacePose =
+          f.ext[0] &&
+          !f.ext[1] &&
+          !f.ext[2] &&
+          f.ext[3] &&
+          f.palmArea >= EDGE_PALM &&
+          f.thumbOut;
+        if (!spacePose) this.spaceLatched = false;
         this.history.push([
           now,
           [pts[8][0], pts[8][1]],
@@ -1749,6 +1774,10 @@ HELLO</textarea
           l,
         ]);
         if (this.history.length > 24) this.history.shift();
+        if (spacePose && !this.spaceLatched) {
+          this.spaceLatched = true;
+          return [" ", 0.95];
+        }
         if (l === "I" && this.drawsJ()) return ["J", Math.min(c, 0.84)];
         if ((l === "D" || l === "G" || l === "X") && this.drawsZ())
           return ["Z", Math.min(c, 0.8)];
@@ -1796,9 +1825,9 @@ HELLO</textarea
           const shared = {
             numHands: 1,
             runningMode: "VIDEO",
-            minHandDetectionConfidence: 0.5,
-            minHandPresenceConfidence: 0.5,
-            minTrackingConfidence: 0.5,
+            minHandDetectionConfidence: 0.6,
+            minHandPresenceConfidence: 0.6,
+            minTrackingConfidence: 0.6,
           };
           try {
             handLandmarker = await vision.HandLandmarker.createFromOptions(fs, {
@@ -1895,12 +1924,13 @@ HELLO</textarea
       function applyResult(d) {
         landmarks = d.landmarks || [];
         const known = d.hand && d.letter;
-        if (known && letterEl.textContent !== d.letter) {
+        const displayLetter = d.letter === " " ? "␣" : d.letter;
+        if (known && letterEl.textContent !== displayLetter) {
           letterEl.classList.remove("pop");
           void letterEl.offsetWidth;
           letterEl.classList.add("pop");
         }
-        letterEl.textContent = known ? d.letter : "—";
+        letterEl.textContent = known ? displayLetter : "—";
         letterEl.classList.toggle("dim", !known);
         if (!d.hand) {
           pending = "";
@@ -1912,18 +1942,28 @@ HELLO</textarea
         if (!d.letter) {
           pending = "";
           pendingCount = 0;
+          armed = true;
           setStatus("हाथ दिख रहा है");
           return;
         }
-        setStatus(d.letter);
+        if (d.letter === " ") {
+          pending = "";
+          pendingCount = 0;
+          committed = " ";
+          armed = false;
+          setStatus("स्पेस");
+          insertText(" ");
+          return;
+        }
+        setStatus(d.letter === " " ? "स्पेस" : d.letter);
         if (d.letter === pending) pendingCount++;
         else {
           pending = d.letter;
           pendingCount = 1;
         }
         if (
-          pendingCount >= 4 &&
-          d.confidence >= 0.78 &&
+          pendingCount >= 3 &&
+          d.confidence >= 0.74 &&
           (armed || d.letter !== committed)
         ) {
           insertText(d.letter);
@@ -2091,6 +2131,30 @@ HELLO</textarea
           sentence.focus();
           sentence.select();
         }
+      });
+      $("#speak").addEventListener("click", () => {
+        const text = sentence.value.trim();
+        if (!text) {
+          showBanner("पहले लेख लिखें या हाथ के संकेत दिखाएँ।");
+          return;
+        }
+        if (
+          !("speechSynthesis" in window) ||
+          !("SpeechSynthesisUtterance" in window)
+        ) {
+          showBanner("इस ब्राउज़र में आवाज़ चलाने की सुविधा उपलब्ध नहीं है।");
+          return;
+        }
+        const id = ++speechRunId;
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "en-US";
+        utterance.rate = 0.9;
+        utterance.onerror = () => {
+          if (id === speechRunId)
+            showBanner("आवाज़ नहीं चल पाई। कृपया फिर से कोशिश करें।");
+        };
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utterance);
       });
       document.addEventListener("keydown", (e) => {
         if (!running || e.target === sentence || e.target === $("#spellText"))
@@ -2340,9 +2404,9 @@ HELLO</textarea
         renderer.outputEncoding = THREE.sRGBEncoding;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
         renderer.toneMappingExposure = 1.12;
-        renderer.setClearColor(0xf3f7ff, 1);
+        renderer.setClearColor(0xcbd9ec, 1);
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xf3f7ff);
+        scene.background = new THREE.Color(0xcbd9ec);
         const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 80);
         scene.add(new THREE.HemisphereLight(0xfff8ee, 0xb9c7e4, 0.85));
         const key = new THREE.DirectionalLight(0xfff6ea, 1.25);
@@ -2356,17 +2420,17 @@ HELLO</textarea
         scene.add(rim);
 
         const skin = new THREE.MeshStandardMaterial({
-          color: 0xf0c3a4,
+          color: 0xf2a879,
           roughness: 0.48,
           metalness: 0,
         });
         const skinLight = new THREE.MeshStandardMaterial({
-          color: 0xf7d3b8,
+          color: 0xffc49a,
           roughness: 0.4,
           metalness: 0,
         });
         const knuckleMat = new THREE.MeshStandardMaterial({
-          color: 0xe3aa88,
+          color: 0xe89568,
           roughness: 0.55,
           metalness: 0,
         });
@@ -2376,17 +2440,17 @@ HELLO</textarea
           metalness: 0.04,
         });
         const shirt = new THREE.MeshStandardMaterial({
-          color: 0x2f6fed,
+          color: 0x1763f5,
           roughness: 0.72,
           metalness: 0,
         });
         const shirtLight = new THREE.MeshStandardMaterial({
-          color: 0x7aa6f8,
+          color: 0x78a8ff,
           roughness: 0.6,
           metalness: 0,
         });
         const hair = new THREE.MeshStandardMaterial({
-          color: 0x2c241f,
+          color: 0x3b281f,
           roughness: 0.6,
           metalness: 0,
         });
@@ -2401,14 +2465,18 @@ HELLO</textarea
           metalness: 0,
         });
         const mouthMat = new THREE.MeshStandardMaterial({
-          color: 0xc46b74,
+          color: 0xe05d70,
           roughness: 0.5,
           metalness: 0,
         });
         skin.emissive = new THREE.Color(0x5a2c1c);
-        skin.emissiveIntensity = 0.07;
+        skin.emissiveIntensity = 0.09;
         skinLight.emissive = new THREE.Color(0x5a2c1c);
-        skinLight.emissiveIntensity = 0.05;
+        skinLight.emissiveIntensity = 0.07;
+        shirt.emissive = new THREE.Color(0x0b2e79);
+        shirt.emissiveIntensity = 0.1;
+        shirtLight.emissive = new THREE.Color(0x183d82);
+        shirtLight.emissiveIntensity = 0.06;
 
         const sphere = new THREE.SphereGeometry(1, 28, 18);
         function ball(rx, ry, rz, material, parent) {
