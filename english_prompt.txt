@@ -1,68 +1,156 @@
-Build a complete, working web application called “संकेतवाणी (SanketVani) — Sign Language Detection & Learning” in **one single HTML file**.
+PROMPT: BUILD "SANKETVANI" (संकेतवाणी) - A HINDI SIGN-LANGUAGE LEARNING WEB APP
+=====================================================================
 
-### 1. Main requirements
-- Put all HTML, CSS, and JavaScript in the same `index.html` file.
-- Create a beautiful, modern, student-friendly interface.
-- Use a dark navy-blue background with blue and cyan gradients, white text, and yellow accents.
-- Use rounded cards, subtle shadows, smooth animations, clear typography, and a responsive layout that works on laptops and mobile phones.
-- The interface should look polished and professional, like a modern educational technology product.
+ROLE
+You are a senior front-end engineer and UI designer. Build the complete project described below as ONE self-contained file named index.html (HTML + CSS + vanilla JS, no build step, no framework). It will be deployed as a static site (for example on Vercel) and is shown at a school exhibition, so it must look polished, feel friendly to students, and work on both desktop and mobile phones.
 
-### 2. Header and layout
-- Display the Hindi title “संकेतवाणी” with the English subtitle “Sign Language Detection & Learning Platform”.
-- Add a short tagline: “हाथों की भाषा, अब हर किसी के लिए”.
-- Include navigation or tabs for “Live Detection”, “Learn Alphabet”, and “About”.
-- Show a clear camera status indicator.
 
-### 3. Live hand-sign detection
-- Use the user's webcam to detect a hand in real time.
-- Use MediaPipe Hands or MediaPipe Hand Landmarker through browser-compatible JavaScript loaded from a CDN.
-- Draw visible hand landmarks and connections over the camera feed.
-- Display the predicted letter in a large, easy-to-read output card.
-- Show the confidence or detection status only if it is genuinely calculated; do not invent confidence scores.
-- Include Start Camera, Stop Camera, and Reset buttons.
-- Ask for camera permission only after the user clicks Start Camera.
-- Handle camera permission denial, missing cameras, loading failures, and no-hand-detected states gracefully.
-- Stop the camera stream when the user stops detection.
-- Keep the application functional without a backend or build tools.
+1. WHAT THE PRODUCT IS
+----------------------
+SanketVani is a student-friendly tool for the English fingerspelling alphabet (A-Z) in sign language. It has two directions:
+  a) HAND -> TEXT: the user shows hand signs to the camera and the app writes the letters.
+  b) TEXT -> HAND: the user types text and an animated 3D character shows each letter as a hand sign.
+All hand recognition runs in the browser. No video is ever uploaded.
 
-### 4. Gesture recognition
-- Implement a real, understandable gesture-classification function using hand landmark coordinates and finger positions.
-- Support the ASL manual alphabet A–Z as far as the implementation can reliably distinguish the gestures.
-- Include a space gesture for separating words.
-- Display J and Z as motion-based gestures and explain that they require movement tracking; do not pretend that a single still frame can recognize them reliably.
-- Avoid claiming perfect recognition. If a gesture cannot be distinguished reliably, show “Unknown gesture” rather than displaying a random letter.
-- Add a short stability check so the displayed character does not flicker excessively between predictions.
-- Keep the classification code clearly commented so students can understand and improve it.
+The entire interface language is HINDI (Devanagari). Letters being recognised or signed stay in English A-Z. Never switch the UI to English.
 
-### 5. Alphabet learning chart
-- Create an attractive A–Z alphabet chart using individual cards.
-- Each card must show the letter, a clear hand-sign illustration or image, and the letter name.
-- Include a separate Space card.
-- Make sure the illustrations correspond to the intended ASL alphabet signs. Do not use random hand photos or repeat the same hand image for different letters.
-- If reliable external images are unavailable, use carefully designed local SVG illustrations or clearly label the chart as a learning reference.
-- Clicking a card should open a larger view with the letter and sign illustration.
 
-### 6. Additional features
-- Add a simple “How it works” section explaining:
-  1. Webcam captures the hand.
-  2. Hand landmarks are detected.
-  3. Gesture rules classify the sign.
-  4. The predicted character appears on screen.
-- Add a small technology section mentioning HTML, CSS, JavaScript, and MediaPipe.
-- Add a beginner-friendly About section describing the project's accessibility goal.
-- Add clear loading, error, and success messages.
-- Make buttons, tabs, and alphabet cards genuinely interactive.
+2. TECH CONSTRAINTS
+-------------------
+- Single file index.html. Inline <style> and <script>.
+- Hand tracking: MediaPipe Tasks Vision 0.10.21 HandLandmarker, loaded with dynamic import() from
+  https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/vision_bundle.mjs
+  WASM files: https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/wasm
+  Model: https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task
+  Options: numHands 1, runningMode VIDEO, detection/presence/tracking confidence 0.5. Try the GPU delegate first and fall back to CPU.
+- 3D animation: Three.js r128 from https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js (plain <script>, global THREE).
+- Font: Google Fonts "Noto Sans Devanagari" (weights 400-800), with system fallbacks (Kohinoor Devanagari, Devanagari Sangam MN, system-ui).
+- Latin letters (the big letter badges, text areas) use "Avenir Next", "Segoe UI", system-ui.
+- Page language attribute: lang="hi". Respect prefers-reduced-motion.
+- Favicon: inline SVG data URI - a yellow (#ffe14a) rounded square (rx 8, 32x32) with a dark-blue (#1d4e9a) rounded bar at x=7 y=20 width=18 height=5 rx=2.5.
 
-### 7. Technical requirements
-- Return the complete application as a single `index.html` file, with no separate CSS or JavaScript files.
-- External CDN scripts are allowed for MediaPipe; explain that an internet connection may be required.
-- Do not use React, Vue, a backend, a database, npm, or a build process.
-- Use semantic HTML, accessible labels, and readable code comments.
-- Ensure the webcam video and landmark overlay remain correctly aligned and responsive.
-- Avoid placeholder buttons, fake detection, hard-coded random predictions, and misleading AI claims.
-- Test for JavaScript errors and fix them before returning the result.
 
-### 8. Final output
-Return the complete, ready-to-save HTML code in one code block. Briefly explain how to save it as `index.html` and run it through localhost or HTTPS so webcam permissions work.
+3. BRANDING AND DESIGN TOKENS (keep exactly)
+--------------------------------------------
+Brand colours:  blue #2f6fed, deep blue (ink) #1d4e9a, yellow #ffe14a.
+Text #1a2b4a, muted #5d6e93, line #e1eaf8, soft background #f3f7ff.
+Accent colours for variety (student-friendly): coral #ff6b81, mint #22c3a0, purple #8b5cf6, orange #ff9f43, sky #38bdf8.
+Style: light theme, white and soft blue backgrounds, big rounded corners (about 24px), soft blue shadows, pill-shaped buttons, minimum touch target 44px, visible keyboard focus outlines.
+Primary button: blue with white text. Secondary: white with a light border. Highlight button: yellow with deep-blue text.
 
-Prioritize working functionality, honest recognition limits, a beautiful interface, and code that a student can understand.
+NAVBAR (sticky, translucent white with blur):
+- Left: the SAME logo as the favicon (yellow rounded square with the blue bar) followed by the text "संकेतवाणी" in deep blue, bold. Clicking goes to #home. On very small screens the text may hide and only the logo shows.
+- Right: a pill-shaped tab switcher with three links: "होम" (#home), "हाथ से लेख" (#read), "लेख से हाथ" (#sign). The active tab is filled blue with white text.
+
+ICONS (no emojis anywhere in the UI):
+Use one consistent set of glossy "3D clay" icon tiles built from an inline SVG sprite (<symbol> glyphs referenced with <use>). Each tile is a rounded square with a diagonal gradient, an inner top highlight, an inner bottom shade, a solid darker "thickness" shadow underneath, a soft drop shadow, and a small glossy white ellipse in the top-left corner. Glyphs are white (dark blue on the yellow tile) rounded-stroke outlines with a tiny drop shadow.
+Colour variants: blue, coral, mint, purple, orange, sky, yellow. Sizes: xs 26px, sm 34px, md 46px, lg 58px, xl 104px.
+Glyphs needed: camera, hand (raised hand), pen, lock, eye, note, rocket, flip-camera, copy, trash, backspace, space, check, sparkle, play, stop.
+Use these tiles in the hero, in feature cards (large), in page titles (medium), and inside buttons (extra small). A helper function t3(name, colour, size) should return the markup, and placeholder tags like <i data-i="cam" data-k="blue" data-s="lg"></i> are replaced with it at startup.
+
+DO NOT include: a footer, and no "use HTTPS on phone" tip box. Keep pages clean.
+
+
+4. NAVIGATION / PAGES (hash routing, single file)
+-------------------------------------------------
+Three pages, shown one at a time based on location.hash: #home (default), #read, #sign. Unknown hashes go to #home. On every route change scroll to top, stop the camera if leaving #read, and stop any sign playback and the 3D render loop if leaving #sign. Flow: Landing page -> camera page -> text-to-sign page; each app page has a "next" banner linking to the other one.
+
+
+5. PAGE 1 - LANDING (#home)
+---------------------------
+Make it beautiful, with tasteful animation:
+- Hero on a soft blue-to-white gradient with three large blurred colour blobs (light blue, light yellow, light pink) that slowly drift.
+- Left: a small pill "सीखना हुआ आसान और मज़ेदार" with a sparkle tile; big headline "हाथ के इशारे, अब शब्दों में" where "शब्दों" has a yellow marker underline; a lead paragraph (show A-Z hand signs to the camera and it is written instantly, or type and watch the hand sign it); two buttons: "कैमरा चालू करें" (primary, goes to #read) and "लेख से हाथ देखें" (secondary, goes to #sign). Entrance animation: pill, headline, paragraph and buttons rise and fade in, staggered.
+- Right: a demo card (rounded, gradient, 4:5) containing a large blue hand tile that gently waves, a yellow letter badge top-right that cycles through the letters of "HELLO" about every 0.9 s, and an output strip at the bottom that spells the word letter by letter (current letter highlighted, remaining letters shown as dots). Around the card float four coloured letter chips (A coral, B mint, C purple, D orange) bobbing up and down.
+- A slightly tilted blue band below the hero with an infinitely scrolling marquee of A-Z tiles (yellow, white, mint, pink alternating).
+- Section "सिर्फ़ तीन आसान कदम": three cards (1. कैमरा चालू करें, 2. अक्षर दिखाएँ, 3. वाक्य बनाएँ) each with a large 3D icon tile and a coloured top bar.
+- Section "विद्यार्थियों के लिए बनाया गया": three cards (हाथ से लेख, लेख से हाथ, आपके डिवाइस पर - privacy, video never leaves the device).
+- Cards lift slightly on hover; sections fade/slide in on scroll with IntersectionObserver (staggered delays).
+- A blue gradient closing band: "तैयार हैं? चलिए शुरू करें" with a yellow button "अभी आज़माएँ" linking to #read.
+
+
+6. PAGE 2 - HAND -> TEXT (#read)
+--------------------------------
+Layout (max width about 900px, soft blue background):
+- Title row: camera tile + "हाथ से लेख", subtitle, and a status pill on the right (grey dot when idle; green pulsing dot when live; text such as "तैयार", "हाथ दिख रहा है", the detected letter, "हाथ नहीं दिख रहा").
+- A dismissible-by-state banner area for friendly Hindi error messages.
+- Three small tip chips: "अच्छी रोशनी में बैठें", "पूरी हथेली दिखाएँ", "हर अक्षर पर एक पल रुकें".
+- Camera stage: rounded, white border, dark background, 4:3 on desktop and 3:4 portrait on phones (max height about 72vh). When off it shows a dark blue gradient with a camera tile and the text "कैमरा बंद है". Top-right buttons: flip camera (icon only, only when live), "चालू करें" (yellow) / "बंद करें" (dark translucent). A small HUD pill at top-left shows the current status.
+- Below: a big letter tile showing the currently recognised letter (blue; grey with "-" when nothing is recognised; a small pop animation when it changes) plus a caption "अभी पहचाना गया अक्षर".
+- Large textarea for the sentence (placeholder "यहाँ लिखाई आएगी"), flashes pale yellow when a letter is appended.
+- Buttons: "स्पेस", "मिटाएँ" (backspace, deletes selection or one character), "साफ़" (clear), and "कॉपी" (copies text; label temporarily becomes "कॉपी हो गया"). While the camera is running, the physical Space and Backspace keys also work when focus is not inside a text field.
+- A "next" banner linking to #sign ("लेख से हाथ").
+
+Drawing: draw each video frame to a canvas sized to the stage (device-pixel-ratio capped at 2) and overlay the 21 hand landmarks as white bones (MediaPipe hand connections plus palm links 5-9, 9-13, 13-17) and yellow joints. Mirror the canvas with CSS only when the camera is the front camera.
+
+Detection loop: run detection every ~120 ms (at least 40 ms between frames) in an async loop guarded by a run id so stale loops stop.
+
+Letter commit logic: a letter is typed into the text box only when it has been the same for 4 consecutive detections AND confidence >= 0.78. After typing, the same letter is not repeated until either the hand disappears (re-arm) or a different letter is seen.
+
+RECOGNITION RULES (rule-based classifier on landmarks; no extra ML):
+Normalise the hand: scale = wrist-to-middle-MCP distance; build a local frame where "up" = wrist->middle MCP and "across" = index MCP vs pinky MCP orthogonalised against up; express every landmark in that frame divided by scale. For each finger (index, middle, ring, pinky) compute the angle at the PIP joint (MCP-PIP-DIP) in 3D; a finger is "extended" when that angle >= 150 degrees. Other features: thumb-tip to index-tip distance (pinch), palm area (|cross of wrist->index MCP and wrist->pinky MCP| / scale^2; "edge-on" when < 0.4), thumb tip position, index/middle tip spread, whether index and middle cross, whether the index is "hooked" (index angle 112-152, index tip above its DIP, other three fingers curled < 110), image-space angle of index finger (pointing down when |angle| >= 145 degrees), mean finger angle, thumb-out flag (thumb tip x > index MCP x + 0.08), mean distance from thumb tip to the four fingertips.
+Return "unclear" (no letter) when any finger angle lies in the ambiguous 130-158 band, except when all four are within 18 degrees of each other with pinch >= 0.45 and a front-facing palm.
+Mapping:
+- Hooked index -> X.
+- Only pinky up -> Y if thumb tip x > 0.7, else I.
+- Thumb-index pinch < 0.32 with middle, ring, pinky up and index not up -> F.
+- All four up -> B (only if thumb tucked across the palm, otherwise no letter).
+- Index, middle, ring up -> W.
+- Index + middle up -> edge-on and pointing down: P; edge-on: H; crossed: R; thumb low and between the two fingers: K; wide spread (>= 0.24): V; otherwise U.
+- Index only -> hooked X; edge-on and down: Q; edge-on: G; thumb out: L; otherwise D.
+- Fist (none up) -> mean angle >= 132: C; tip gap <= 0.22 and mean angle >= 108: O; tip gap <= 0.22: E; thumb beside index high: A; thumb low across: S; thumb under ring MCP: M; thumb under middle MCP: N; else T.
+Motion letters: keep a short history (about 24 samples, reset after 0.75 s gap). J = letter I with the pinky tip tracing a downward curve (path length >= 0.18, net >= 0.05, length/net >= 1.25, moves down > 0.05). Z = index-only/G/X shape whose fingertip path length >= 0.18 with at least 2 horizontal direction reversals.
+
+CAMERA ON PHONES (critical - this was a real bug):
+- navigator.mediaDevices.getUserMedia MUST be called first, directly inside the tap handler, BEFORE loading the heavy MediaPipe model. Phone browsers (especially iOS Safari) lose the user gesture if a long async load happens first and then never show the permission prompt. Load the model only after the stream is obtained.
+- Try constraints in order: {facingMode ideal, 1280x720 ideal} -> {facingMode} -> {video:true}. Stop falling back immediately on NotAllowedError/SecurityError.
+- The <video> element needs playsinline, webkit-playsinline, muted and autoplay (also set via setAttribute and video.muted=true). Keep it in the DOM, 2x2 px and almost transparent (not display:none, not opacity:0), because some mobile browsers pause hidden videos.
+- Wait for loadedmetadata, then set the stage aspect-ratio from the real video size.
+- Provide a flip-camera button (user <-> environment) that restarts the stream.
+- Friendly Hindi errors: insecure context (page must be on HTTPS, e.g. a Vercel link), unsupported browser, permission denied (explain how to allow camera in browser settings), camera busy/not found, model failed to load (check internet). Opening via file:// shows an explanatory banner.
+- Stop all tracks and release the video when the tab is hidden, when the user taps stop, or when leaving the page.
+
+
+7. PAGE 3 - TEXT -> HAND (#sign) - 3D ANIMATED CHARACTER
+--------------------------------------------------------
+Layout: title row with pen tile and "लेख से हाथ", status pill; a rounded canvas card (height about min(420px, 52vh), min 300px, pale blue #f3f7ff) with a yellow letter badge top-right showing the letter currently being signed ("-" when idle, a space symbol for spaces); a textarea (default text "HELLO"); a spell-line below it showing the letters of the script with the current one highlighted in yellow; a "शुरू करें" button (play icon) that turns into "रोकें" (stop icon) while playing; a grid of 26 colourful A-Z buttons - tapping one puts the letter in the textarea and plays that single sign; and a "next" banner linking back to #read.
+Input handling: uppercase the text, replace anything outside A-Z and space with a space, collapse repeated spaces, trim. If empty, show a Hindi status asking for text.
+
+3D SCENE (Three.js r128, WebGLRenderer on the existing canvas, sRGB output, ACES filmic tone mapping exposure 1.12, clear colour #f3f7ff, perspective camera FOV 30 at about (0.2, 3.35, 20.5) looking at (0.15, 2.55, 0.4), re-fitted to the canvas size every frame):
+- Lights: hemisphere (warm white / blue-grey), warm key directional, cool fill, yellow rim.
+- Materials (MeshStandardMaterial): skin #f0c3a4 with a faint warm emissive, lighter skin, knuckle #e3aa88, nail #ffe6d4, blue shirt #2f6fed and light shirt #7aa6f8, dark hair #2c241f, white, ink #1a2b4a, mouth #c46b74.
+- A friendly seated character on the left built only from scaled spheres and cylinders: torso, shoulders, neck, round head with ears, hair cap and fringe, two eyes with pupils and highlights that BLINK about every 4.2 s, a smile (torus arc), gentle breathing bob and slight head sway. A yellow disc "sun" behind and a soft blue ground shadow.
+- The signing arm on the right: shoulder -> elbow -> wrist solved with a simple two-bone IK (upper arm 3.7, forearm 3.55, elbow pole hint (0.4, -1, 0.15)), cylinders for bones and spheres for joints. The off-hand is a small static resting hand with stub fingers.
+- The signing hand (scale 0.44) is a rich model: palm and heel spheres, thumb mound, wrist post, four fingers each with a knuckle ball, three cylindrical phalanges that rotate on X for curling, a rounded fingertip and a nail; four finger specs with different lengths/radii; the thumb has root plus three curl joints and a nail.
+- Pose vector per letter (21 numbers): for each of the four fingers [side spread, curl1, curl2, curl3] (16 numbers), then thumb [out angle, bend1, bend2], hand roll (wrist turn) and a "thumb across palm" flag. Finger curl presets: straight s [0,0,0], folded f [86,98,64], hook h [24,96,38], curved-C c [46,54,40], bent-box b [66,82,56], round-O p [52,68,48], relaxed rest r [6,12,8]. Define a table for A-Z with finger shapes as four letters (index to pinky), thumb values, optional spreads and roll (for example G/H roll 86, P roll 168, Q roll 150, C roll 18, E/M/N thumb across palm). There is also a "rest" pose.
+- Base finger splay offsets [4, 0, -3, -7] degrees. Index/middle fingers shift slightly in depth when spread (for example V), and the hand turns to a side view when the roll exceeds about 55 degrees.
+- Playback state machine: for each letter, MOVE phase (about 520 ms, eased cubic in/out, shorter with reduced motion) from the previous pose to the new pose, then HOLD phase (about 1100 ms; 340 ms for a space which returns to rest; about 1600 ms for J and Z). After the last letter, ease back to the rest pose and reset the badge/button. Stopping resets everything immediately.
+- J and Z are MOTION letters: during HOLD the whole hand translates/rotates along a path while the relevant fingertip (pinky for J, index for Z) leaves a fading trail of small deep-blue dots (up to 90 spheres that grow and become more opaque toward the newest). J = hook the pinky down and curve (path with dx, dy and wrist roll); Z = three straight strokes (right, diagonal down-left, right).
+- The camera gently follows the pointer over the canvas (parallax), easing back when the pointer leaves.
+- Render loop runs ONLY while the #sign page is visible. If THREE is undefined or WebGL fails, show a short Hindi note inside the card instead of crashing.
+
+
+8. RESPONSIVENESS
+-----------------
+- Desktop: two-column hero, three-column card grids.
+- Under ~820px: single-column hero, one-column cards.
+- Under ~560px: compact tabs (smaller padding), logo text hidden if needed, full-width stacked CTA buttons, portrait camera stage, smaller textarea font, safe-area insets (viewport-fit=cover, env(safe-area-inset-*)).
+- Prevent horizontal scroll on all pages. All controls at least 44px tall, tap highlight disabled.
+- Add <meta name="theme-color" content="#2f6fed">.
+
+
+9. COPY (HINDI) GUIDELINES
+--------------------------
+Short, friendly, student-oriented, plain verbs; buttons name the action ("चालू करें", "बंद करें", "कॉपी", "शुरू करें", "रोकें"). Errors say what happened and what to do. No English UI strings except the A-Z letters, the sample word HELLO and the brand-neutral technical names.
+
+
+10. ACCEPTANCE CHECKLIST
+------------------------
+[ ] One index.html opens on desktop and on a phone over HTTPS.
+[ ] Landing -> camera page -> text-to-sign page flow works through buttons and the navbar tabs.
+[ ] Navbar logo matches the favicon; Hindi throughout; brand colours unchanged, extra accent colours used sparingly.
+[ ] No emojis; all icons are the consistent glossy 3D tiles; no footer; no HTTPS tip box.
+[ ] Phone shows the camera permission prompt on tapping "चालू करें" (getUserMedia before model load), flip camera works, errors are readable.
+[ ] Letters A-Z are recognised with the stability logic, J and Z by motion; sentence box supports space, backspace, clear and copy.
+[ ] Text-to-sign uses the full 3D character with blinking, IK arm, detailed hand, motion trails for J/Z, per-letter badge and spell-line highlight, A-Z quick buttons.
+[ ] Camera and 3D loops stop when leaving their pages; reduced-motion is respected.
