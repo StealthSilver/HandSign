@@ -723,7 +723,7 @@
       }
       .stage {
         position: relative;
-        width: min(100%, calc(68vh * 4 / 3));
+        width: 100%;
         aspect-ratio: 4/3;
         margin-inline: auto;
         border-radius: 28px;
@@ -3146,14 +3146,26 @@ HELLO</textarea
         backdropGradient.addColorStop(0.52, "#859cf3");
         backdropGradient.addColorStop(1, "#ffae72");
         backdropContext.fillStyle = backdropGradient;
-        backdropContext.fillRect(0, 0, backdropCanvas.width, backdropCanvas.height);
+        backdropContext.fillRect(
+          0,
+          0,
+          backdropCanvas.width,
+          backdropCanvas.height,
+        );
         [
           [120, 160, 190, "rgba(83, 255, 221, 0.38)"],
           [840, 180, 220, "rgba(255, 202, 117, 0.38)"],
           [680, 690, 250, "rgba(255, 119, 173, 0.24)"],
           [90, 700, 210, "rgba(112, 142, 255, 0.26)"],
         ].forEach(([x, y, radius, color]) => {
-          const glow = backdropContext.createRadialGradient(x, y, 0, x, y, radius);
+          const glow = backdropContext.createRadialGradient(
+            x,
+            y,
+            0,
+            x,
+            y,
+            radius,
+          );
           glow.addColorStop(0, color);
           glow.addColorStop(1, "rgba(255, 255, 255, 0)");
           backdropContext.fillStyle = glow;
