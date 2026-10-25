@@ -547,6 +547,14 @@
         color: var(--muted);
         font-size: 15px;
       }
+      #page-read .head h2,
+      #page-new .head h2 {
+        font-size: 20px;
+      }
+      #page-read .head p,
+      #page-new .head p {
+        font-size: 13px;
+      }
       .status {
         display: inline-flex;
         align-items: center;
@@ -673,6 +681,9 @@
         background: var(--blue);
         font-size: 13px;
       }
+      .custom-code-value-both {
+        font-size: 11px;
+      }
       .custom-code:nth-child(6n + 2) {
         background: #fff1f3;
       }
@@ -724,7 +735,7 @@
       .stage {
         position: relative;
         width: 100%;
-        aspect-ratio: 10/7;
+        aspect-ratio: 4/3;
         margin-inline: auto;
         border-radius: 28px;
         overflow: hidden;
@@ -1039,8 +1050,23 @@
         }
         .stage {
           width: 100%;
-          aspect-ratio: 10/7;
+          aspect-ratio: 4/3;
           max-height: 72vh;
+        }
+        #page-read,
+        #page-new {
+          padding-top: 12px;
+        }
+        #page-read .head,
+        #page-new .head {
+          margin-bottom: 8px;
+        }
+        #page-read .guide {
+          margin-bottom: 8px;
+        }
+        #page-read .bar,
+        #page-new .bar {
+          margin: 8px 0 6px;
         }
         textarea.box {
           font-size: 22px;
@@ -1668,7 +1694,9 @@ HELLO</textarea
             </div>
             <div class="custom-code" role="listitem">
               <span class="custom-code-letter">M</span
-              ><span class="custom-code-value">34</span>
+              ><span class="custom-code-value custom-code-value-both"
+                >34, 134</span
+              >
             </div>
             <div class="custom-code" role="listitem">
               <span class="custom-code-letter">N</span
@@ -1696,7 +1724,7 @@ HELLO</textarea
             </div>
             <div class="custom-code" role="listitem">
               <span class="custom-code-letter">T</span
-              ><span class="custom-code-value">134</span>
+              ><span class="custom-code-value">135</span>
             </div>
             <div class="custom-code" role="listitem">
               <span class="custom-code-letter">U</span
@@ -2418,13 +2446,14 @@ HELLO</textarea
             15: "K",
             23: "L",
             34: "M",
+            134: "M",
             234: "N",
             fist: "O",
             25: "P",
             35: "Q",
             13: "R",
             4: "S",
-            134: "T",
+            135: "T",
             1345: "U",
             1245: "V",
             24: "W",
@@ -2605,8 +2634,8 @@ HELLO</textarea
           await customVideo.play();
           if (id !== customRunId) return;
           customStage.style.aspectRatio = customVideo.videoWidth
-            ? `${(customVideo.videoWidth * 7) / 6} / ${customVideo.videoHeight}`
-            : "10 / 7";
+            ? `${customVideo.videoWidth} / ${customVideo.videoHeight}`
+            : "4 / 3";
           const track = customStream.getVideoTracks()[0];
           const mode =
             track && track.getSettings ? track.getSettings().facingMode : "";
@@ -2704,7 +2733,7 @@ HELLO</textarea
           if (video.videoWidth) r();
           else video.onloadedmetadata = () => r();
         });
-        stage.style.aspectRatio = `${(video.videoWidth * 7) / 6} / ${video.videoHeight}`;
+        stage.style.aspectRatio = `${video.videoWidth} / ${video.videoHeight}`;
         const tr = stream.getVideoTracks()[0],
           fm = tr && tr.getSettings ? tr.getSettings().facingMode : "";
         view.classList.toggle("mirror", fm ? fm === "user" : facing === "user");
