@@ -528,6 +528,39 @@
       .app .wrap {
         width: min(900px, calc(100% - 28px));
       }
+      #page-read .wrap,
+      #page-new .wrap {
+        width: calc(100% - 40px);
+        max-width: none;
+      }
+      .app:fullscreen {
+        min-height: 100vh;
+        overflow-y: auto;
+        padding-top: 18px;
+        background: var(--soft);
+      }
+      .app:fullscreen .wrap {
+        width: calc(100% - 48px);
+        max-width: none;
+      }
+      .camera-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+        align-items: start;
+        gap: 24px;
+      }
+      .camera-output {
+        min-width: 0;
+      }
+      .camera-output .bar {
+        margin-top: 0;
+      }
+      .fullscreen-btn {
+        flex: none;
+        padding-inline: 14px;
+        color: var(--ink);
+        font-weight: 700;
+      }
       .head {
         display: flex;
         justify-content: space-between;
@@ -1023,6 +1056,12 @@
         .hero .wrap {
           grid-template-columns: 1fr;
         }
+        .camera-layout {
+          grid-template-columns: 1fr;
+        }
+        .camera-output .bar {
+          margin-top: 12px;
+        }
         .stage-card {
           min-height: 320px;
         }
@@ -1056,6 +1095,14 @@
         #page-read,
         #page-new {
           padding-top: 12px;
+        }
+        #page-read .wrap,
+        #page-new .wrap,
+        .app:fullscreen .wrap {
+          width: calc(100% - 24px);
+        }
+        .camera-layout {
+          gap: 12px;
         }
         #page-read .head,
         #page-new .head {
@@ -1440,6 +1487,9 @@
           <div class="status" id="status">
             <span class="dot"></span><span id="statusText">तैयार</span>
           </div>
+          <button class="fullscreen-btn" id="readFullscreen" type="button">
+            पूर्ण स्क्रीन
+          </button>
         </div>
         <div id="banner" class="banner" role="alert"></div>
         <div class="guide">
@@ -1448,7 +1498,8 @@
           <div><b>3</b>संकेत बदलें; दोहराने से पहले हाथ ढीला करें</div>
           <div><b>4</b>स्पेस: तर्जनी और छोटी उँगली उठाएँ, अंगूठा फैलाएँ</div>
         </div>
-        <section class="stage" id="stage" aria-label="कैमरा">
+        <div class="camera-layout">
+          <section class="stage" id="stage" aria-label="कैमरा">
           <video
             id="video"
             playsinline
@@ -1472,35 +1523,38 @@
             <button id="start" type="button">चालू करें</button>
             <button id="stop" type="button" hidden>बंद करें</button>
           </div>
-        </section>
-        <div class="bar">
-          <div id="letter" class="lat dim" aria-live="polite">—</div>
-          <p>अभी पहचाना गया अक्षर</p>
-        </div>
-        <textarea
-          id="sentence"
-          class="box"
-          rows="3"
-          autocomplete="off"
-          spellcheck="false"
-          aria-label="लेख"
-          placeholder="यहाँ लिखाई आएगी"
-        ></textarea>
-        <div class="row">
-          <button id="space" type="button">
-            <i data-i="space" data-k="purple" data-s="xs"></i>स्पेस
-          </button>
-          <button id="back" type="button">
-            <i data-i="back" data-k="orange" data-s="xs"></i>मिटाएँ
-          </button>
-          <button id="clear" type="button">
-            <i data-i="trash" data-k="coral" data-s="xs"></i>साफ़
-          </button>
-          <button id="copy" class="cp grow" type="button">
-            <i data-i="copy" data-k="yellow" data-s="xs"></i
-            ><span id="copyLbl">कॉपी</span>
-          </button>
-          <button id="speak" type="button">सुनें</button>
+          </section>
+          <div class="camera-output">
+            <div class="bar">
+              <div id="letter" class="lat dim" aria-live="polite">—</div>
+              <p>अभी पहचाना गया अक्षर</p>
+            </div>
+            <textarea
+              id="sentence"
+              class="box"
+              rows="3"
+              autocomplete="off"
+              spellcheck="false"
+              aria-label="लेख"
+              placeholder="यहाँ लिखाई आएगी"
+            ></textarea>
+            <div class="row">
+              <button id="space" type="button">
+                <i data-i="space" data-k="purple" data-s="xs"></i>स्पेस
+              </button>
+              <button id="back" type="button">
+                <i data-i="back" data-k="orange" data-s="xs"></i>मिटाएँ
+              </button>
+              <button id="clear" type="button">
+                <i data-i="trash" data-k="coral" data-s="xs"></i>साफ़
+              </button>
+              <button id="copy" class="cp grow" type="button">
+                <i data-i="copy" data-k="yellow" data-s="xs"></i
+                ><span id="copyLbl">कॉपी</span>
+              </button>
+              <button id="speak" type="button">सुनें</button>
+            </div>
+          </div>
         </div>
         <div class="next">
           <span>अब उल्टा करके देखें: लिखिए और हाथ से संकेत देखिए</span
@@ -1570,13 +1624,17 @@ HELLO</textarea
           <div class="status" id="customStatus">
             <span class="dot"></span><span id="customStatusText">तैयार</span>
           </div>
+          <button class="fullscreen-btn" id="newFullscreen" type="button">
+            पूर्ण स्क्रीन
+          </button>
         </div>
         <div id="customBanner" class="banner" role="alert"></div>
-        <section
-          class="stage"
-          id="customStage"
-          aria-label="नए संकेतों का कैमरा"
-        >
+        <div class="camera-layout">
+          <section
+            class="stage"
+            id="customStage"
+            aria-label="नए संकेतों का कैमरा"
+          >
           <video
             id="customVideo"
             class="custom-source"
@@ -1606,34 +1664,37 @@ HELLO</textarea
             <button id="customStart" type="button">चालू करें</button>
             <button id="customStop" type="button" hidden>बंद करें</button>
           </div>
-        </section>
-        <div class="bar">
-          <div id="customLetter" class="lat dim">—</div>
-          <p>पहचाना गया नया अक्षर</p>
-        </div>
-        <textarea
-          id="customText"
-          class="box"
-          rows="3"
-          readonly
-          aria-label="पहचाने गए नए संकेतों का लेख"
-          placeholder="पहचाने गए अक्षर और स्पेस यहाँ जुड़ेंगे"
-        ></textarea>
-        <div class="row">
-          <button id="customSpace" type="button">
-            <i data-i="space" data-k="purple" data-s="xs"></i>स्पेस
-          </button>
-          <button id="customBack" type="button">
-            <i data-i="back" data-k="orange" data-s="xs"></i>मिटाएँ
-          </button>
-          <button id="customClear" type="button">
-            <i data-i="trash" data-k="coral" data-s="xs"></i>साफ़
-          </button>
-          <button id="customCopy" class="cp grow" type="button">
-            <i data-i="copy" data-k="yellow" data-s="xs"></i
-            ><span id="customCopyLbl">कॉपी</span>
-          </button>
-          <button id="customSpeak" type="button">सुनें</button>
+          </section>
+          <div class="camera-output">
+            <div class="bar">
+              <div id="customLetter" class="lat dim">—</div>
+              <p>पहचाना गया नया अक्षर</p>
+            </div>
+            <textarea
+              id="customText"
+              class="box"
+              rows="3"
+              readonly
+              aria-label="पहचाने गए नए संकेतों का लेख"
+              placeholder="पहचाने गए अक्षर और स्पेस यहाँ जुड़ेंगे"
+            ></textarea>
+            <div class="row">
+              <button id="customSpace" type="button">
+                <i data-i="space" data-k="purple" data-s="xs"></i>स्पेस
+              </button>
+              <button id="customBack" type="button">
+                <i data-i="back" data-k="orange" data-s="xs"></i>मिटाएँ
+              </button>
+              <button id="customClear" type="button">
+                <i data-i="trash" data-k="coral" data-s="xs"></i>साफ़
+              </button>
+              <button id="customCopy" class="cp grow" type="button">
+                <i data-i="copy" data-k="yellow" data-s="xs"></i
+                ><span id="customCopyLbl">कॉपी</span>
+              </button>
+              <button id="customSpeak" type="button">सुनें</button>
+            </div>
+          </div>
         </div>
         <section class="custom-chart-wrap" aria-labelledby="customChartTitle">
           <h3 class="custom-chart-title" id="customChartTitle">
@@ -2476,6 +2537,44 @@ HELLO</textarea
       function clearCustomBanner() {
         customBanner.classList.remove("show");
       }
+      async function toggleAppFullscreen(page, showError) {
+        try {
+          if (document.fullscreenElement === page) {
+            await document.exitFullscreen();
+            return;
+          }
+          if (!page.requestFullscreen) {
+            showError("इस ब्राउज़र में पूर्ण स्क्रीन सुविधा उपलब्ध नहीं है।");
+            return;
+          }
+          await page.requestFullscreen();
+        } catch (error) {
+          showError("पूर्ण स्क्रीन मोड शुरू नहीं हो सका।");
+        }
+      }
+      function updateFullscreenButtons() {
+        $("#readFullscreen").textContent =
+          document.fullscreenElement === $("#page-read")
+            ? "पूर्ण स्क्रीन बंद करें"
+            : "पूर्ण स्क्रीन";
+        $("#newFullscreen").textContent =
+          document.fullscreenElement === $("#page-new")
+            ? "पूर्ण स्क्रीन बंद करें"
+            : "पूर्ण स्क्रीन";
+      }
+      document.addEventListener("fullscreenchange", updateFullscreenButtons);
+      document.addEventListener("keydown", async (event) => {
+        if (event.key !== "Escape") return;
+        const page = document.fullscreenElement;
+        if (page !== $("#page-read") && page !== $("#page-new")) return;
+        try {
+          await document.exitFullscreen();
+        } catch (error) {
+          (page.id === "page-read" ? showBanner : showCustomBanner)(
+            "पूर्ण स्क्रीन से बाहर नहीं निकल सका।",
+          );
+        }
+      });
       function customDrawFrame(id) {
         if (!customRunning || id !== customRunId) return;
         if (customVideo.readyState >= 2) {
@@ -2774,6 +2873,9 @@ HELLO</textarea
 
       startBtn.addEventListener("click", startCamera);
       stopBtn.addEventListener("click", stopCamera);
+      $("#readFullscreen").addEventListener("click", () =>
+        toggleAppFullscreen($("#page-read"), showBanner),
+      );
       flipBtn.addEventListener("click", async () => {
         facing = facing === "user" ? "environment" : "user";
         if (running) {
@@ -2783,6 +2885,9 @@ HELLO</textarea
       });
       customStartBtn.addEventListener("click", startCustomCamera);
       customStopBtn.addEventListener("click", stopCustomCamera);
+      $("#newFullscreen").addEventListener("click", () =>
+        toggleAppFullscreen($("#page-new"), showCustomBanner),
+      );
       customFlipBtn.addEventListener("click", async () => {
         facing = facing === "user" ? "environment" : "user";
         if (customRunning) {
