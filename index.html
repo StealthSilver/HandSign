@@ -724,7 +724,7 @@
       .stage {
         position: relative;
         width: 100%;
-        aspect-ratio: 4/3;
+        aspect-ratio: 40/27;
         margin-inline: auto;
         border-radius: 28px;
         overflow: hidden;
@@ -1039,7 +1039,7 @@
         }
         .stage {
           width: 100%;
-          aspect-ratio: 3/4;
+          aspect-ratio: 5/6;
           max-height: 72vh;
         }
         textarea.box {
@@ -2605,8 +2605,8 @@ HELLO</textarea
           await customVideo.play();
           if (id !== customRunId) return;
           customStage.style.aspectRatio = customVideo.videoWidth
-            ? `${customVideo.videoWidth} / ${customVideo.videoHeight}`
-            : "4 / 3";
+            ? `${(customVideo.videoWidth * 10) / 9} / ${customVideo.videoHeight}`
+            : "40 / 27";
           const track = customStream.getVideoTracks()[0];
           const mode =
             track && track.getSettings ? track.getSettings().facingMode : "";
@@ -2704,7 +2704,7 @@ HELLO</textarea
           if (video.videoWidth) r();
           else video.onloadedmetadata = () => r();
         });
-        stage.style.aspectRatio = `${video.videoWidth} / ${video.videoHeight}`;
+        stage.style.aspectRatio = `${(video.videoWidth * 10) / 9} / ${video.videoHeight}`;
         const tr = stream.getVideoTracks()[0],
           fm = tr && tr.getSettings ? tr.getSettings().facingMode : "";
         view.classList.toggle("mirror", fm ? fm === "user" : facing === "user");
